@@ -1,7 +1,6 @@
 import { Sequelize } from "sequelize";
 
 import createCategorias from "../seeders/cria-categorias";
-import createMetodoDePagamento from "../seeders/cria-metodo-de-pagamento";
 
 import {
   DataBaseConfigConstructorInterface,
@@ -79,9 +78,6 @@ export class DataBaseConfig implements DataBaseConfigInterface {
         this.instance.getQueryInterface()
       );
 
-      await createMetodoDePagamento.up(
-        this.instance.getQueryInterface()
-      );
     } catch (error) {
       console.error("Erro ao sincronizar modelos com o banco de dados:", error);
     }

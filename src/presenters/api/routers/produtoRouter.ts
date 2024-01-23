@@ -5,7 +5,7 @@ import DBProdutosRepository from "~datasources/database/repository/produtoDataba
 import { ImagemProdutoInput } from "~domain/entities/types/produtoType";
 import { ProdutoController } from "~interfaceAdapters/controllers/produtoController";
 
-import { AdicionarItemBody, AdicionarItemParams } from "./schemas/pedidoRouter.schema";
+// import { AdicionarItemBody, AdicionarItemParams } from "./schemas/pedidoRouter.schema";
 import {
   AdicionaImagenSchema,
   CriaProdutoBody,
@@ -685,41 +685,41 @@ produtoRouter.delete(
  *       500:
  *         description: Erro na api.
  */
-produtoRouter.post(
-  "/:id/imagens",
-  validaRequisicao(AdicionaImagenSchema),
-  async (
-    req: Request<AdicionarItemParams, AdicionarItemBody>,
-    res: Response
-  ) => {
-    try {
-      const { id } = req.params;
-      const body = req.body;
+// produtoRouter.post(
+//   "/:id/imagens",
+//   validaRequisicao(AdicionaImagenSchema),
+//   async (
+//     req: Request<AdicionarItemParams, AdicionarItemBody>,
+//     res: Response
+//   ) => {
+//     try {
+//       const { id } = req.params;
+//       const body = req.body;
 
-      const imagens = body?.imagens.map((imagem: ImagemProdutoInput) => {
-        return { ...imagem, produtoId: id };
-      });
+//       const imagens = body?.imagens.map((imagem: ImagemProdutoInput) => {
+//         return { ...imagem, produtoId: id };
+//       });
 
-      const imagensAdicionadas = await ProdutoController.adicionaImagens(dbProdutosRepository,
-        imagens
-      );
-      return res.status(201).json({
-        status: "success",
-        message: imagensAdicionadas,
-      });
-    } catch (err: any) {
-      if (err.message === "produto_inexistente") {
-        return res.status(404).json({
-          status: "error",
-          message: "Produto não encontrado!",
-        });
-      }
-      return res.status(500).json({
-        status: "error",
-        message: err,
-      });
-    }
-  }
-);
+//       const imagensAdicionadas = await ProdutoController.adicionaImagens(dbProdutosRepository,
+//         imagens
+//       );
+//       return res.status(201).json({
+//         status: "success",
+//         message: imagensAdicionadas,
+//       });
+//     } catch (err: any) {
+//       if (err.message === "produto_inexistente") {
+//         return res.status(404).json({
+//           status: "error",
+//           message: "Produto não encontrado!",
+//         });
+//       }
+//       return res.status(500).json({
+//         status: "error",
+//         message: err,
+//       });
+//     }
+//   }
+// );
 
 export default produtoRouter;
