@@ -1,5 +1,38 @@
 import { z } from "zod";
 
+export type AdicionarItemPayload = z.infer<typeof adicionarItemSchema>;
+export type AdicionarItemBody = AdicionarItemPayload["body"];
+export type AdicionarItemParams = AdicionarItemPayload["params"];
+
+/** Adicionar Item */
+export const adicionarItemSchema = z.object({
+  params: z.object({
+    id: z
+      .string({
+        required_error: "O id do pedido é obrigatório",
+        invalid_type_error: "O id pedido deve ser um texto",
+      })
+      .uuid({ message: "O id do pedido deve ser UUID" }),
+  }),
+  body: z.object({
+    produtoId: z
+      .string({
+        required_error: "O id do produto é obrigatório",
+        invalid_type_error: "id inválido",
+      })
+      .uuid({ message: "O id do produto deve ser UUID" }),
+    quantidade: z
+      .number({
+        required_error: "Quantidade é obrigatória",
+        invalid_type_error: "Quantidade deve ser um número",
+      })
+      .positive({ message: "Quantidade deve ser maior que zero" }),
+    observacao: z
+      .string({ invalid_type_error: "Observação deve ser um texto" })
+      .optional(),
+  }),
+});
+
 /** Cria Produto */
 export const CriaProdutoSchema = z.object({
   body: z.object({
