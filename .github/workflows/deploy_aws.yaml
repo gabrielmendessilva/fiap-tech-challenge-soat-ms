@@ -8,16 +8,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Run test and lint
+    name: Tests
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
         node-version: 20
         cache: 'yarn'
-    - run: yarn install --frozen-lockfile
-    - run: yarn test
-    - run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+    - name: Run test and lint
+      run: |
+        yarn install
+        yarn test --coverage
+        npx eslint src --ext .js,.jsx,.ts,.tsx
+
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: 'https://sonarcloud.io'
 
   build_and_publish_image:
     needs: [ test ]
@@ -41,7 +53,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
-
+            
   deploy-eks:
     needs: [ build_and_publish_image ]
     runs-on: ubuntu-latest
@@ -56,15 +68,20 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
             aws-region: ${{ secrets.AWS_REGION }}
-      - name: Config ECS Role
+
+      - name: Update ECS TASK Definition
+        env: 
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ECS_ROLE: ${{ secrets.AWS_ECS_ROLE }}
         run: |
-          sed -e "s/\${AWS_ACCOUT_ID}/${AWS_ACCOUT_ID}/g" ecs/task-definition_template.json > ecs/task-definition.json
+          sed -e "s/\${AWS_ACCOUNT_ID}/${AWS_ACCOUNT_ID}/g" -e "s/\${AWS_ECS_ROLE}/${AWS_ECS_ROLE}/g" ecs/task-definition-template.json > ecs/task-definition.json
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ecs/task-definition.json
-          container-name: fiat-tech-producao
+          container-name: fiap-tech-produto
           image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
           environment-variables: |
               NODE_ENV=${{ secrets.NODE_ENV }}
@@ -79,13 +96,13 @@ jobs:
         with:
           force-new-deployment: true
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          cluster: ${{ secrets.ECS_CLUESTER }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
 
       - name: Create and Deploy New ECS Service
         env: 
           CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
           SERVICE_NAME: ${{ secrets.SERVICE_NAME  }}
-          TASK_DEFINITION: fiat-tech-producao-family
+          TASK_DEFINITION: fiap-tech-pagamento-family
           SUB_NET_1: ${{ secrets.SUB_NET_1 }}
           SUB_NET_2: ${{ secrets.SUB_NET_2 }}
           SUB_NET_3: ${{ secrets.SUB_NET_3 }}
