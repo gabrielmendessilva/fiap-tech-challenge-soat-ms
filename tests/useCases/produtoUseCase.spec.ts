@@ -1,6 +1,5 @@
 import { ProdutoInput } from "../../src/domain/entities/types/produtoType";
 import ProdutoRepository from "../../src/domain/repositories/produtoRepository";
-// import ProdutoRepository from "../../src/domain/repositories/produtoRepository";
 import ProdutoUseCase from "../../src/domain/useCases/produtoUseCase";
 import ProdutoRepositoryMock from "../mock/repositories/produtoRepositoryMock";
 
@@ -11,67 +10,6 @@ describe('ProdutoUseCase', () => {
   const updatedAt = null;
   beforeEach(() => {
     produtoRepositoryMock = new ProdutoRepositoryMock(createdAt).repository();
-    // produtoRepositoryMock = {
-    //   adicionaImagens: jest.fn().mockResolvedValue(null),
-    //   removeImagem: jest.fn().mockResolvedValue(null),
-    //   criaProduto: jest.fn().mockResolvedValue({
-    //     id: "1",
-    //     nome: "mock_1",
-    //     preco: 10,
-    //     descricao: null,
-    //     createdAt,
-    //     deletedAt: null,
-    //     updatedAt: null
-    //   }),
-    //   deletaProduto: jest.fn().mockResolvedValue(1),
-    //   editaProduto: jest.fn().mockResolvedValue({
-    //     id: "1",
-    //     nome: "mock_1_editado",
-    //     preco: 1.1,
-    //     descricao: "test",
-    //     createdAt,
-    //     deletedAt: null,
-    //     updatedAt
-    //   }),
-    //   listaProdutos: jest.fn().mockResolvedValue([
-    //     {
-    //       id: "1",
-    //       nome: "mock_1",
-    //       preco: 10,
-    //       descricao: null,
-    //       createdAt,
-    //       deletedAt: null,
-    //       updatedAt: null
-    //     },
-    //     {
-    //       id: "2",
-    //       nome: "mock_2",
-    //       preco: 101,
-    //       descricao: null,
-    //       createdAt,
-    //       deletedAt: null,
-    //       updatedAt: null
-    //     },
-    //     {
-    //       id: "3",
-    //       nome: "mock_4",
-    //       preco: 10,
-    //       descricao: null,
-    //       createdAt,
-    //       deletedAt: null,
-    //       updatedAt: null
-    //     }
-    //   ]),
-    //   retornaProduto: jest.fn().mockResolvedValue({
-    //     id: "1",
-    //     nome: "mock_1",
-    //     preco: 10,
-    //     descricao: null,
-    //     createdAt,
-    //     deletedAt: null,
-    //     updatedAt: null
-    //   }),
-    // };
   })
 
 
