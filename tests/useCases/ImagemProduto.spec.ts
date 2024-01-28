@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-import { ImagemProdutoInput } from "../../src/domain/entities/types/produtoType";
 import ImagemProduto from "../../src/domain/entities/ImagemProduto";
+import { ImagemProdutoInput } from "../../src/domain/entities/types/produtoType";
 
 describe('ImagemProduto', () => {
     const imagemProdutoInput: ImagemProdutoInput = {
