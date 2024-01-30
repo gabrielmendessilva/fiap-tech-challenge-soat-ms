@@ -2,7 +2,6 @@ import { json, urlencoded } from "body-parser";
 import { Express, Request, Response, Router } from "express";
 import morgan from "morgan";
 
-// import { DataBaseConfigInterface } from "adapter/driven/infra/config/interfaces/db.config.interface";
 import {
   ServerConstructorInterface,
   ServerInterface,
@@ -10,16 +9,13 @@ import {
 
 export class Server implements ServerInterface {
   appConfig: Express;
-  // dataBaseConfig: DataBaseConfigInterface;
 
   routers: Array<{ [routeBase: string]: Router }>;
 
   port = Number(process.env.PORT) || 3000;
 
-  // constructor({ dataBaseConfig, appConfig }: ServerConstructorInterface) {
   constructor({ appConfig }: ServerConstructorInterface) {
     this.appConfig = appConfig;
-    // this.dataBaseConfig = dataBaseConfig;
     this.routers = [];
   }
 
@@ -56,16 +52,6 @@ export class Server implements ServerInterface {
 
       this.appConfig.listen(this.port, async () => {
         console.log(`🚀: Server is running at http://localhost:${this.port}`);
-        // await this.dataBaseConfig.authenticate();
-        // this.dataBaseConfig
-        //   .getInstance()
-        //   .sync({ force: false })
-        //   .then(() => {
-        //     console.log("✅: Synced database successfully.");
-        //   })
-        //   .catch((err: any) => {
-        //     console.error("❌: Error on sync database.", err);
-        //   });
       });
     } catch (err: any) {
       console.error("🚨: Unable to init the server:", err);
