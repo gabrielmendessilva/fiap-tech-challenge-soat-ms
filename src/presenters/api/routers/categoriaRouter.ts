@@ -1,4 +1,5 @@
-import express from "express";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import express, { RequestHandler } from "express";
 import { Request, Response } from "express";
 
 import DBCategoriasRepository from "~datasources/database/repository/categoriaDatabaseRepository";
@@ -89,7 +90,7 @@ const dbCategoriasRepository = new DBCategoriasRepository();
  */
 categoriaRouter.post("/",
   validaRequisicao(CriaCategoriaSchema),
-  async (req: Request<unknown, CriaCategoriaPayload>, res: Response) => {
+  (async (req: Request<unknown, CriaCategoriaPayload>, res: Response) => {
     try {
       const categoria = req.body;
 
@@ -106,7 +107,7 @@ categoriaRouter.post("/",
         message: err,
       });
     }
-  }
+  }) as RequestHandler
 );
 
 /**
@@ -136,7 +137,7 @@ categoriaRouter.post("/",
  */
 categoriaRouter.get("/",
   validaRequisicao(ListaCategoriaSchema),
-  async (req: Request<unknown, ListaCategoriaPayload>, res: Response) => {
+  (async (req: Request<unknown, ListaCategoriaPayload>, res: Response) => {
     try {
       const categorias = await CategoriaController.listaCategorias(dbCategoriasRepository);
 
@@ -150,7 +151,7 @@ categoriaRouter.get("/",
         message: err,
       });
     }
-  }
+  }) as RequestHandler
 );
 /**
  * @openapi
@@ -199,11 +200,11 @@ categoriaRouter.get("/",
  */
 categoriaRouter.get("/:id",
   validaRequisicao(RetornaCategoriaSchema),
-  async (req: Request<RetornaCategoriaParams, unknown>, res: Response) => {
+  (async (req: Request<RetornaCategoriaParams, unknown>, res: Response) => {
     try {
       const { id } = req.params;
 
-      const categoria = await CategoriaController.retornaCategoria(dbCategoriasRepository,id);
+      const categoria = await CategoriaController.retornaCategoria(dbCategoriasRepository, id);
 
       if (categoria) {
         return res.status(200).json({
@@ -221,7 +222,7 @@ categoriaRouter.get("/:id",
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 /**
  * @openapi
@@ -268,7 +269,7 @@ categoriaRouter.get("/:id",
  */
 categoriaRouter.delete("/:id", 
   validaRequisicao(DeletaCategoriaSchema),
-  async (req: Request<DeletaCategoriaParams, unknown>, res: Response) => {
+  (async (req: Request<DeletaCategoriaParams, unknown>, res: Response) => {
     try {
       const { id } = req.params;
 
@@ -289,7 +290,7 @@ categoriaRouter.delete("/:id",
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 /**
  * @openapi
@@ -349,7 +350,7 @@ categoriaRouter.delete("/:id",
  */
 categoriaRouter.put("/:id",
   validaRequisicao(EditaCategoriaSchema), 
-  async (req: Request<EditaCategoriaParams, EditaCategoriaPayload>, res: Response) => {
+  (async (req: Request<EditaCategoriaParams, EditaCategoriaPayload>, res: Response) => {
     try {
       const { id } = req.params;
       const categoria = req.body;
@@ -375,7 +376,7 @@ categoriaRouter.put("/:id",
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 
 

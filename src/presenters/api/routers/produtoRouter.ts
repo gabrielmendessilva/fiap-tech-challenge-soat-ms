@@ -1,4 +1,5 @@
-import express from "express";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import express, { RequestHandler } from "express";
 import { Request, Response } from "express";
 
 import DBProdutosRepository from "~datasources/database/repository/produtoDatabaseRepository";
@@ -154,7 +155,7 @@ const dbProdutosRepository = new DBProdutosRepository();
  */
 produtoRouter.post("/",
   validaRequisicao(CriaProdutoSchema),
-  async (
+  (async (
     req: Request<unknown, CriaProdutoBody>,
     res: Response
   ) => {
@@ -185,7 +186,7 @@ produtoRouter.post("/",
         message: err,
       });
     }
-  }
+  }) as RequestHandler
 );
 
 /**
@@ -224,7 +225,7 @@ produtoRouter.post("/",
  */
 produtoRouter.get("/",
   validaRequisicao(ListaProdutoSchema),
-  async (
+  (async (
     req: Request<ListaProdutoParams, unknown>,
     res: Response
   ) => {
@@ -250,7 +251,7 @@ produtoRouter.get("/",
         message: err,
       });
     }
-  }
+  }) as RequestHandler
 );
 
 /**
@@ -300,7 +301,7 @@ produtoRouter.get("/",
  */
 produtoRouter.get("/:id",
   validaRequisicao(RetornaProdutoSchema),
-  async (
+  (async (
     req: Request<RetornaProdutoParams, unknown>,
     res: Response
   ) => {
@@ -325,7 +326,7 @@ produtoRouter.get("/:id",
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 
 /**
@@ -373,7 +374,7 @@ produtoRouter.get("/:id",
  */
 produtoRouter.delete("/:id",
   validaRequisicao(DeletaProdutoSchema),
-  async (
+  (async (
     req: Request<DeletaProdutoBody, unknown>,
     res: Response
   ) => {
@@ -397,7 +398,7 @@ produtoRouter.delete("/:id",
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 
 /**
@@ -462,7 +463,7 @@ produtoRouter.delete("/:id",
  */
 produtoRouter.put("/:id",
   validaRequisicao(EditaProdutoSchema),
-  async (
+  (async (
     req: Request<EditaProdutoParams, EditaProdutoBody>,
     res: Response
   ) => {
@@ -498,7 +499,7 @@ produtoRouter.put("/:id",
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 
 /**
@@ -560,7 +561,7 @@ produtoRouter.put("/:id",
 produtoRouter.delete(
   "/:idProduto/imagem/:idImagem",
   validaRequisicao(RemoveImagemSchema),
-  async (
+  (async (
     req: Request<RemoveImagemParams, unknown>,
     res: Response
   ) => {
@@ -602,7 +603,7 @@ produtoRouter.delete(
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 
 /**
@@ -688,7 +689,7 @@ produtoRouter.delete(
 produtoRouter.post(
   "/:id/imagens",
   validaRequisicao(AdicionaImagenSchema),
-  async (
+  (async (
     req: Request<AdicionarItemParams, AdicionarItemBody>,
     res: Response
   ) => {
@@ -719,7 +720,7 @@ produtoRouter.post(
         message: err,
       });
     }
-  }
+  }) as unknown as RequestHandler
 );
 
 export default produtoRouter;

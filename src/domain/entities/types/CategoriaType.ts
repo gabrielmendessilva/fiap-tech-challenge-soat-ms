@@ -13,8 +13,3 @@ export interface CategoriaDTO {
   updatedAt: Date | null;
   deletedAt: Date | null;
 }
-
-// export interface CriaCategoriaInput {
-//   id: string;
-//   nome: string;
-// }
