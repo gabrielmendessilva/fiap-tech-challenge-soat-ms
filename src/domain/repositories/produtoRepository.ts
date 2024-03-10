@@ -1,7 +1,7 @@
 import { ImagemProdutoDTO, ProdutoDTO } from "~domain/entities/types/produtoType";
 
 export default interface ProdutoRepository {
-  adicionaImagens(imagens: ImagemProdutoDTO[]): Promise<ImagemProdutoDTO[]>; // TODO
+  adicionaImagens(imagens: ImagemProdutoDTO[]): Promise<ImagemProdutoDTO[]>;
   removeImagem(idProduto: string, idImagem: string): Promise<number>;
   criaProduto(produto: ProdutoDTO): Promise<ProdutoDTO>;
   deletaProduto(idProduto: string): Promise<number>;

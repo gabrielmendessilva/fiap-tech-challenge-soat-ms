@@ -55,7 +55,6 @@ export const CriaProdutoSchema = z.object({
         invalid_type_error: "id inválido",
       })
       .uuid({ message: "categoriaId deve ser UUID" }),
-    //images - TODO 
   }),
 });
 
@@ -140,7 +139,6 @@ export const EditaProdutoSchema = z.object({
         invalid_type_error: "id inválido",
       })
       .uuid({ message: "categoriaId deve ser UUID" })
-    //images - TODO 
   }),
 });
 
@@ -181,7 +179,6 @@ export const AdicionaImagenSchema = z.object({
       .uuid({ message: "O id deve ser UUID" }),
   }),
   body: z.object({
-    //images - TODO 
   }),
 });
 
