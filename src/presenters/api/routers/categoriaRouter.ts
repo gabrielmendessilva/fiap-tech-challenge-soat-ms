@@ -24,7 +24,7 @@ const categoriaRouter = express.Router();
 
 const dbCategoriasRepository = new DBCategoriasRepository();
 
-/** 
+/**
  * @openapi
  * components:
  *   schemas:
@@ -48,7 +48,7 @@ const dbCategoriasRepository = new DBCategoriasRepository();
  *           example: string
  *       required:
  *         - nome
- *   parameters: {} 
+ *   parameters: {}
  */
 
 /**
@@ -88,27 +88,36 @@ const dbCategoriasRepository = new DBCategoriasRepository();
  *       500:
  *         description: Erro na criacao da categoria.
  */
-categoriaRouter.post("/",
-  validaRequisicao(CriaCategoriaSchema),
-  (async (req: Request<unknown, CriaCategoriaPayload>, res: Response) => {
-    try {
-      const categoria = req.body;
+categoriaRouter.post("/", validaRequisicao(CriaCategoriaSchema), (async (
+  req: Request<unknown, CriaCategoriaPayload>,
+  res: Response
+) => {
+  try {
+    const categoria = req.body;
 
-      const categoriaCriado = await CategoriaController.criarCategoria(dbCategoriasRepository,
-        categoria
-      );
-      return res.status(201).json({
-        status: "success",
-        message: categoriaCriado,
-      });
-    } catch (err: any) {
-      return res.status(500).json({
-        status: "error",
-        message: err,
-      });
-    }
-  }) as RequestHandler
-);
+    categoria.nome = strip_html_tags(categoria.nome);
+
+    const categoriaCriado = await CategoriaController.criarCategoria(
+      dbCategoriasRepository,
+      categoria
+    );
+    return res.status(201).json({
+      status: "success",
+      message: categoriaCriado,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: "error",
+      message: err,
+    });
+  }
+}) as RequestHandler);
+
+function strip_html_tags(str: string) {
+  if (str === null || str === "") return false;
+  else str = str.toString();
+  return str.replace(/<[^>]*>/g, "");
+}
 
 /**
  * @openapi
@@ -131,28 +140,30 @@ categoriaRouter.post("/",
  *                 categorias:
  *                   type: array
  *                   items:
- *                     $ref: "#/components/schemas/Categoria" 
+ *                     $ref: "#/components/schemas/Categoria"
  *       500:
  *         description: Erro.
  */
-categoriaRouter.get("/",
-  validaRequisicao(ListaCategoriaSchema),
-  (async (req: Request<unknown, ListaCategoriaPayload>, res: Response) => {
-    try {
-      const categorias = await CategoriaController.listaCategorias(dbCategoriasRepository);
+categoriaRouter.get("/", validaRequisicao(ListaCategoriaSchema), (async (
+  req: Request<unknown, ListaCategoriaPayload>,
+  res: Response
+) => {
+  try {
+    const categorias = await CategoriaController.listaCategorias(
+      dbCategoriasRepository
+    );
 
-      return res.status(200).json({
-        status: "success",
-        categorias,
-      });
-    } catch (err: any) {
-      return res.status(500).json({
-        status: "error",
-        message: err,
-      });
-    }
-  }) as RequestHandler
-);
+    return res.status(200).json({
+      status: "success",
+      categorias,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: "error",
+      message: err,
+    });
+  }
+}) as RequestHandler);
 /**
  * @openapi
  * /categoria/{id}:
@@ -198,32 +209,35 @@ categoriaRouter.get("/",
  *       500:
  *         description: Erro na api.
  */
-categoriaRouter.get("/:id",
-  validaRequisicao(RetornaCategoriaSchema),
-  (async (req: Request<RetornaCategoriaParams, unknown>, res: Response) => {
-    try {
-      const { id } = req.params;
+categoriaRouter.get("/:id", validaRequisicao(RetornaCategoriaSchema), (async (
+  req: Request<RetornaCategoriaParams, unknown>,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
 
-      const categoria = await CategoriaController.retornaCategoria(dbCategoriasRepository, id);
+    const categoria = await CategoriaController.retornaCategoria(
+      dbCategoriasRepository,
+      id
+    );
 
-      if (categoria) {
-        return res.status(200).json({
-          status: "success",
-          categoria,
-        });
-      }
-      return res.status(404).json({
-        status: "error",
-        message: "Categoria não encontrada!",
-      });
-    } catch (err: any) {
-      return res.status(500).json({
-        status: "error",
-        message: err,
+    if (categoria) {
+      return res.status(200).json({
+        status: "success",
+        categoria,
       });
     }
-  }) as unknown as RequestHandler
-);
+    return res.status(404).json({
+      status: "error",
+      message: "Categoria não encontrada!",
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: "error",
+      message: err,
+    });
+  }
+}) as unknown as RequestHandler);
 /**
  * @openapi
  * /categoria/{id}:
@@ -267,31 +281,34 @@ categoriaRouter.get("/:id",
  *       500:
  *         description: Erro na api.
  */
-categoriaRouter.delete("/:id", 
-  validaRequisicao(DeletaCategoriaSchema),
-  (async (req: Request<DeletaCategoriaParams, unknown>, res: Response) => {
-    try {
-      const { id } = req.params;
+categoriaRouter.delete("/:id", validaRequisicao(DeletaCategoriaSchema), (async (
+  req: Request<DeletaCategoriaParams, unknown>,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
 
-      const categoriaDeletado = await CategoriaController.deletaCategoria(dbCategoriasRepository, id);
+    const categoriaDeletado = await CategoriaController.deletaCategoria(
+      dbCategoriasRepository,
+      id
+    );
 
-      if (categoriaDeletado > 0) {
-        return res.status(200).json({
-          status: "success",
-        });
-      }
-      return res.status(404).json({
-        status: "error",
-        message: "Categoria não encontrada!",
-      });
-    } catch (err: any) {
-      return res.status(500).json({
-        status: "error",
-        message: err,
+    if (categoriaDeletado > 0) {
+      return res.status(200).json({
+        status: "success",
       });
     }
-  }) as unknown as RequestHandler
-);
+    return res.status(404).json({
+      status: "error",
+      message: "Categoria não encontrada!",
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: "error",
+      message: err,
+    });
+  }
+}) as unknown as RequestHandler);
 /**
  * @openapi
  * /categoria/{id}:
@@ -348,36 +365,36 @@ categoriaRouter.delete("/:id",
  *       500:
  *         description: Erro na api.
  */
-categoriaRouter.put("/:id",
-  validaRequisicao(EditaCategoriaSchema), 
-  (async (req: Request<EditaCategoriaParams, EditaCategoriaPayload>, res: Response) => {
-    try {
-      const { id } = req.params;
-      const categoria = req.body;
+categoriaRouter.put("/:id", validaRequisicao(EditaCategoriaSchema), (async (
+  req: Request<EditaCategoriaParams, EditaCategoriaPayload>,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const categoria = req.body;
 
-      const categoriaAtualizada = await CategoriaController.editaCategoria(dbCategoriasRepository,
-        id,
-        categoria
-      );
+    const categoriaAtualizada = await CategoriaController.editaCategoria(
+      dbCategoriasRepository,
+      id,
+      categoria
+    );
 
-      if (categoriaAtualizada) {
-        return res.status(200).json({
-          status: "success",
-          message: categoriaAtualizada,
-        });
-      }
-      return res.status(404).json({
-        status: "error",
-        message: "Categoria não encontrada!",
-      });
-    } catch (err: any) {
-      return res.status(500).json({
-        status: "error",
-        message: err,
+    if (categoriaAtualizada) {
+      return res.status(200).json({
+        status: "success",
+        message: categoriaAtualizada,
       });
     }
-  }) as unknown as RequestHandler
-);
-
+    return res.status(404).json({
+      status: "error",
+      message: "Categoria não encontrada!",
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      status: "error",
+      message: err,
+    });
+  }
+}) as unknown as RequestHandler);
 
 export default categoriaRouter;
