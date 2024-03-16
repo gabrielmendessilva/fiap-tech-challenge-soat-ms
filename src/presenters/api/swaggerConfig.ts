@@ -3,9 +3,9 @@ const options = {
   swaggerDefinition: {
     openapi: '3.0.0',
     info: {
-      title: 'Fiap Tech Challenge Soat',
+      title: 'Fiap Tech Challenge Soat - Microservico Produtos',
       version: '1.0.0',
-      description: 'Projeto Fase I - SOAT turma I',
+      description: 'Projeto Fase 5 - SOAT turma I',
     },
     servers: [
       { url: "/api" }
